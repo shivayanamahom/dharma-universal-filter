@@ -1,8 +1,30 @@
 # Dharma Universal Filter
 
+[![Joomla](https://img.shields.io/badge/Joomla-5%20%2F%206-5091cd.svg)](https://www.joomla.org/)
+[![License: GPL v3+](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/shivayanamahom/dharma-universal-filter)](https://github.com/shivayanamahom/dharma-universal-filter/releases)
+
 Dharma Universal Filter is a Joomla 5/6 extension package for RadicalMart catalogs. It adds a configurable product filter module with indexed filter data, AJAX updates, vertical and horizontal layouts, offcanvas support, and scheduled reindexing.
 
 The project is currently focused on real catalog pages where filters need to stay fast with many product fields, prices, categories, and option combinations.
+
+## Screenshots
+
+### Horizontal catalog filter
+
+![Horizontal catalog filter](docs/images/horizontal-filter.png)
+
+### Vertical catalog filter
+
+![Vertical catalog filter](docs/images/vertical-filter.png)
+
+### Administrator settings
+
+![Main module settings](docs/images/admin-module.png)
+
+![Filter behavior settings](docs/images/admin-behavior.png)
+
+![Filter fields configuration](docs/images/admin-fields.png)
 
 ## Package Contents
 
@@ -24,6 +46,15 @@ The project is currently focused on real catalog pages where filters need to sta
 - Optional mobile/offcanvas filter mode.
 - Optional sticky horizontal filter with configurable top offset.
 - Russian and English language files.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Roadmap](docs/roadmap.md)
+- [OpenAI Codex for OSS application notes](docs/codex-for-oss.md)
+- [Contributing](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
+- [Security policy](SECURITY.md)
 
 ## Requirements
 
