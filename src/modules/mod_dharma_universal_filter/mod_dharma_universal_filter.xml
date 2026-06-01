@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" method="upgrade">
+	<name>MOD_DHARMA_UNIVERSAL_FILTER</name>
+	<author>Dharma Design</author>
+	<creationDate>May 2026</creationDate>
+	<copyright>Copyright © 2026 Dharma Design. All rights reserved.</copyright>
+	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<version>0.1.0</version>
+	<description>MOD_DHARMA_UNIVERSAL_FILTER_DESCRIPTION</description>
+	<namespace path="src">Joomla\Module\DharmaUniversalFilter</namespace>
+	<scriptfile>script.php</scriptfile>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/mod_dharma_universal_filter.ini</language>
+		<language tag="en-GB">en-GB/mod_dharma_universal_filter.sys.ini</language>
+		<language tag="ru-RU">ru-RU/mod_dharma_universal_filter.ini</language>
+		<language tag="ru-RU">ru-RU/mod_dharma_universal_filter.sys.ini</language>
+	</languages>
+	<files>
+		<folder module="mod_dharma_universal_filter">src</folder>
+		<folder>services</folder>
+		<folder>tmpl</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="category" type="categories"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CATEGORY"
+					   addfieldprefix="Joomla\Component\RadicalMart\Administrator\Field">
+					<option value="">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CATEGORY_CURRENT</option>
+					<option value="1">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CATEGORY_ROOT</option>
+				</field>
+				<field name="menu_item" type="menuitem"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_MENU_ITEM"
+					   filter="integer">
+					<option value="0">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_MENU_ITEM_SELECT</option>
+				</field>
+				<field name="layout" type="list"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_LAYOUT"
+					   class="form-select"
+					   default="_:vertical"
+					   filter="cmd">
+					<option value="_:vertical">MOD_DHARMA_UNIVERSAL_FILTER_LAYOUT_VERTICAL</option>
+					<option value="_:horizontal">MOD_DHARMA_UNIVERSAL_FILTER_LAYOUT_HORIZONTAL</option>
+				</field>
+				<field name="ajax" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_AJAX"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="ajax_auto_submit" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_AJAX_AUTO_SUBMIT"
+					   class="btn-group btn-group-yesno"
+					   default="0"
+					   showon="ajax:1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="show_search_button" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_SHOW_SEARCH_BUTTON"
+					   class="btn-group btn-group-yesno"
+					   default="1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="show_reset_button" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_SHOW_RESET_BUTTON"
+					   class="btn-group btn-group-yesno"
+					   default="1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="offcanvas_mode" type="list"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_OFFCANVAS_MODE"
+					   default="mobile">
+					<option value="never">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_OFFCANVAS_MODE_NEVER</option>
+					<option value="mobile">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_OFFCANVAS_MODE_MOBILE</option>
+					<option value="always">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_OFFCANVAS_MODE_ALWAYS</option>
+				</field>
+				<field name="sticky_filter" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_STICKY_FILTER"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="sticky_offset" type="number"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_STICKY_OFFSET"
+					   default="0"
+					   min="0"
+					   filter="integer"
+					   showon="sticky_filter:1"/>
+			</fieldset>
+			<fieldset name="filter_behavior" label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FILTER_BEHAVIOR">
+				<field name="empty_options_mode" type="list"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_EMPTY_OPTIONS_MODE"
+					   default="hide">
+					<option value="show">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_EMPTY_OPTIONS_SHOW</option>
+					<option value="hide">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_EMPTY_OPTIONS_HIDE</option>
+					<option value="disable">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_EMPTY_OPTIONS_DISABLE</option>
+				</field>
+				<field name="cascade" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CASCADE"
+					   class="btn-group btn-group-yesno"
+					   default="1">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="price_display" type="list"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_PRICE_DISPLAY"
+					   default="inputs">
+					<option value="inputs">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_PRICE_DISPLAY_INPUTS</option>
+					<option value="slider">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_PRICE_DISPLAY_SLIDER</option>
+				</field>
+				<field name="checkbox_display_mode" type="list"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_DISPLAY_MODE"
+					   default="all">
+					<option value="all">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_DISPLAY_ALL</option>
+					<option value="limit">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_DISPLAY_LIMIT</option>
+				</field>
+				<field name="checkbox_visible_count" type="number"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_VISIBLE_COUNT"
+					   default="6"
+					   min="1"
+					   filter="integer"
+					   showon="checkbox_display_mode:limit"/>
+				<field name="show_option_counts" type="radio"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_SHOW_OPTION_COUNTS"
+					   class="btn-group btn-group-yesno"
+					   default="0">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+				<field name="checkbox_dropdown_submit_mode" type="list"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_DROPDOWN_SUBMIT_MODE"
+					   default="apply"
+					   showon="ajax:1">
+					<option value="apply">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_DROPDOWN_SUBMIT_MODE_APPLY</option>
+					<option value="instant">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_CHECKBOX_DROPDOWN_SUBMIT_MODE_INSTANT</option>
+				</field>
+			</fieldset>
+			<fieldset name="filter_fields" label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FILTER_FIELDS">
+				<field name="fields_config_initialized" type="hidden" default="1" filter="integer"/>
+				<field name="fields_config"
+					   type="filterfieldsconfig"
+					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELDS_CONFIG"
+					   addfieldprefix="Joomla\Module\DharmaUniversalFilter\Site\Field"
+					   multiple="true"
+					   layout="joomla.form.field.subform.repeatable-table">
+					<form>
+						<field name="field"
+							   type="filterfields"
+							   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_NAME"
+							   addfieldprefix="Joomla\Module\DharmaUniversalFilter\Site\Field"
+							   required="true"/>
+						<field name="show"
+							   type="radio"
+							   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_SHOW"
+							   class="btn-group btn-group-yesno"
+							   default="1">
+							<option value="1">JYES</option>
+							<option value="0">JNO</option>
+						</field>
+						<field name="title"
+							   type="text"
+							   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_TITLE"
+							   filter="string"/>
+						<field name="display"
+							   type="list"
+							   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_DISPLAY"
+							   default="auto">
+							<option value="auto">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_DISPLAY_AUTO</option>
+							<option value="list">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_DISPLAY_LIST</option>
+							<option value="checkboxes">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_DISPLAY_CHECKBOXES</option>
+							<option value="radio">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_DISPLAY_RADIO</option>
+						</field>
+						<field name="expanded"
+							   type="radio"
+							   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_FIELD_EXPANDED"
+							   class="btn-group btn-group-yesno"
+							   default="1">
+							<option value="1">JYES</option>
+							<option value="0">JNO</option>
+						</field>
+					</form>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="moduleclass_sfx" type="textarea"
+					   label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					   rows="3"
+					   validate="CssIdentifier"/>
+				<field name="cache" type="list"
+					   label="COM_MODULES_FIELD_CACHING_LABEL"
+					   description="COM_MODULES_FIELD_CACHING_DESC"
+					   default="1">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="number"
+					   label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					   filter="integer"
+					   default="900"/>
+				<field name="cachemode" type="hidden"
+					   default="static">
+					<option value="static"/>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+	<media destination="mod_dharma_universal_filter" folder="media">
+		<folder>css</folder>
+		<folder>js</folder>
+		<filename>joomla.asset.json</filename>
+	</media>
+	<layouts destination="modules" folder="layouts">
+		<folder>dharma_universal_filter</folder>
+	</layouts>
+</extension>

@@ -1,0 +1,18 @@
+# Build artifacts
+/dist/
+/tmp/
+*.zip
+
+# Local/editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# OSPanel/Joomla runtime files should never be committed here
+/configuration.php
+/cache/
+/logs/
+/sessions/

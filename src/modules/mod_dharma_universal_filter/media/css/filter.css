@@ -1,0 +1,608 @@
+.duf-hfilter {
+	display: flex;
+	align-items: flex-end;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding: 14px 16px;
+	background: #f3f3f3;
+	border-radius: 4px;
+	margin-bottom: 20px;
+}
+
+.duf-vfilter {
+	display: flex;
+	flex-direction: column;
+	padding: 14px 16px;
+	background: #f3f3f3;
+	border-radius: 4px;
+	margin-bottom: 20px;
+}
+
+.duf-filter-sticky {
+	position: sticky;
+	z-index: 30;
+}
+
+.duf-filter-sticky--fixed {
+	position: fixed !important;
+	z-index: 1030;
+}
+
+.duf-vfilter__accordion {
+	display: flex;
+	flex-direction: column;
+}
+
+.duf-vfilter__item {
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid #d8dee8;
+	border-radius: 0;
+}
+
+.duf-vfilter__button {
+	min-height: 42px;
+	padding: 0;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: #4c4444;
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+}
+
+.duf-vfilter__button:not(.collapsed) {
+	color: #006ebb;
+}
+
+.duf-vfilter__button::after {
+	width: 12px;
+	height: 12px;
+	background-size: 12px;
+	opacity: .7;
+}
+
+.duf-vfilter__body {
+	padding: 0 0 14px;
+}
+
+.duf-hfilter__group {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.duf-hfilter__group--grow {
+	flex: 1 1 150px;
+	position: relative;
+}
+
+.duf-hfilter__group--price {
+	flex: 0 0 auto;
+}
+
+.duf-hfilter__label {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	color: #7a8a9a;
+	white-space: nowrap;
+}
+
+.duf-hfilter select,
+.duf-checkselect__button,
+.duf-vfilter select,
+.duf-hfilter input[type="text"],
+.duf-vfilter input[type="text"],
+.duf-hfilter input[type="number"],
+.duf-vfilter input[type="number"] {
+	height: 36px;
+	padding: 0 28px 0 10px;
+	background: #fff;
+	border: 1px solid #e0e4ea;
+	border-radius: 5px;
+	color: #4c4444;
+	font-size: 13px;
+	outline: none;
+	transition: border-color .15s, box-shadow .15s;
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+.duf-hfilter select,
+.duf-checkselect__button,
+.duf-vfilter select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%237a8a9a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 9px center;
+	cursor: pointer;
+}
+
+.duf-checkselect {
+	position: relative;
+	min-width: 150px;
+}
+
+.duf-checkselect[open] {
+	z-index: 40;
+}
+
+.duf-checkselect__button {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 8px;
+	width: 100%;
+	list-style: none;
+	user-select: none;
+}
+
+.duf-checkselect__button::-webkit-details-marker {
+	display: none;
+}
+
+.duf-checkselect__text {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.duf-checkselect__count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	margin-left: auto;
+	background: #006ebb;
+	border-radius: 999px;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 800;
+	line-height: 1;
+}
+
+.duf-checkselect__clear {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	width: 18px;
+	height: 18px;
+	margin-right: 13px;
+	border-radius: 50%;
+	color: #7a8a9a;
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1;
+	cursor: pointer;
+	transition: background .15s, color .15s;
+}
+
+.duf-checkselect__clear:hover {
+	background: #eef2f6;
+	color: #4c4444;
+}
+
+.duf-checkselect__panel {
+	position: absolute;
+	top: calc(100% + 4px);
+	left: 0;
+	width: max(100%, 220px);
+	max-height: 280px;
+	padding: 10px 12px;
+	background: #fff;
+	border: 1px solid #d8dee8;
+	border-radius: 5px;
+	box-shadow: 0 12px 24px rgba(13, 31, 60, .14);
+	overflow-y: auto;
+}
+
+.duf-checkselect__apply {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 32px;
+	margin-top: 8px;
+	background: #006ebb;
+	border: 0;
+	border-radius: 5px;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	cursor: pointer;
+	transition: background .15s;
+}
+
+.duf-checkselect__apply:hover {
+	background: #0058a0;
+}
+
+.duf-checkselect__panel .radicalmart-fields-standard-filter_checkboxes > ul {
+	margin: 0;
+}
+
+.duf-checkselect__panel .form-check {
+	display: flex;
+	align-items: center;
+	min-height: 28px;
+	margin-bottom: 4px;
+}
+
+.duf-checkselect__panel .form-check-input {
+	margin-top: 0;
+	margin-right: 7px;
+	border-color: #d0d8e4;
+}
+
+.duf-checkselect__panel .form-check-input:checked {
+	background-color: #006ebb;
+	border-color: #006ebb;
+}
+
+.duf-checkselect__panel .form-check-label {
+	color: #4c4444;
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+.duf-checkselect__panel .dharma-filter-option-unavailable,
+.duf-checkselect__panel .dharma-filter-option-disabled {
+	opacity: .45;
+}
+
+.duf-radio-buttons .form-checks,
+.duf-radio-buttons fieldset,
+.duf-radio-buttons .controls,
+.duf-radio-buttons .btn-group,
+.duf-radio-buttons .duf-radio-native,
+.duf-radio-native {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	width: auto;
+	margin: 0;
+}
+
+.duf-radio-buttons .form-check {
+	display: inline-flex;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	min-height: 0;
+}
+
+.duf-radio-buttons .form-check-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.duf-radio-buttons .form-check-label {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 32px;
+	padding: 0 12px;
+	background: #fff;
+	border: 1px solid #d8dee8;
+	border-radius: 5px;
+	color: #4c4444;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+}
+
+.duf-radio-buttons .btn-check + .btn,
+.duf-radio-buttons .btn-check + label,
+.duf-radio-native .btn-check + .btn,
+.duf-radio-native .btn-check + label {
+	display: inline-flex !important;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto !important;
+	width: auto !important;
+	min-width: 0;
+	min-height: 28px;
+	padding: 0 10px;
+	background: #fff !important;
+	border: 1px solid #d8dee8 !important;
+	border-radius: 5px !important;
+	color: #4c4444 !important;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	box-shadow: none;
+	transition: background .15s, border-color .15s, color .15s, box-shadow .15s;
+}
+
+.duf-radio-buttons .form-check-label:hover {
+	border-color: #b0bac8;
+}
+
+.duf-radio-buttons .btn-check + .btn:hover,
+.duf-radio-buttons .btn-check + label:hover,
+.duf-radio-native .btn-check + .btn:hover,
+.duf-radio-native .btn-check + label:hover {
+	border-color: #b0bac8 !important;
+}
+
+.duf-radio-buttons .form-check-input:checked + .form-check-label,
+.duf-radio-buttons .form-check-input:checked ~ .form-check-label,
+.duf-radio-buttons .btn-check:checked + .btn,
+.duf-radio-buttons .btn-check:checked + label,
+.duf-radio-native .btn-check:checked + .btn,
+.duf-radio-native .btn-check:checked + label {
+	background: #006ebb !important;
+	border-color: #006ebb !important;
+	color: #fff !important;
+	box-shadow: 0 0 0 2px rgba(0, 110, 187, .1) !important;
+}
+
+.duf-radio-buttons .form-check-input:disabled + .form-check-label,
+.duf-radio-buttons .form-check-input:disabled ~ .form-check-label,
+.duf-radio-buttons .btn-check:disabled + .btn,
+.duf-radio-buttons .btn-check:disabled + label,
+.duf-radio-native .btn-check:disabled + .btn,
+.duf-radio-native .btn-check:disabled + label {
+	opacity: .45;
+	cursor: not-allowed;
+}
+
+.duf-hfilter input[type="text"],
+.duf-vfilter input[type="text"],
+.duf-hfilter input[type="number"],
+.duf-vfilter input[type="number"] {
+	width: 82px;
+	padding: 0 10px;
+}
+
+.duf-hfilter select:focus,
+.duf-vfilter select:focus,
+.duf-hfilter input:focus,
+.duf-vfilter input:focus {
+	border-color: rgba(0, 110, 187, .45);
+	box-shadow: 0 0 0 3px rgba(0, 110, 187, .08);
+}
+
+.duf-hfilter__divider {
+	width: 1px;
+	height: 36px;
+	background: #d8dee8;
+	flex-shrink: 0;
+	align-self: flex-end;
+}
+
+.duf-hfilter__actions {
+	display: flex;
+	gap: 6px;
+	align-self: flex-end;
+}
+
+.duf-vfilter__actions {
+	display: grid;
+	gap: 8px;
+	padding-top: 14px;
+}
+
+.duf-vfilter__btn {
+	justify-content: center;
+	width: 100%;
+}
+
+.duf-hfilter__btn {
+	display: inline-flex;
+	align-items: center;
+	height: 36px;
+	padding: 0 18px;
+	border-radius: 5px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .08em;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+	border: none;
+	transition: background .15s, color .15s, border-color .15s;
+}
+
+.duf-hfilter__btn--primary {
+	background: #006ebb;
+	color: #fff;
+}
+
+.duf-hfilter__btn--primary:hover {
+	background: #0058a0;
+	color: #fff;
+}
+
+.duf-hfilter__btn--reset {
+	background: transparent;
+	color: #7a8a9a;
+	border: 1px solid #d0d8e4;
+}
+
+.duf-hfilter__btn--reset:hover {
+	border-color: #b0bac8;
+	color: #4c4444;
+}
+
+.duf-filter-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	height: 36px;
+	padding: 0 16px;
+	background: #f3f3f3;
+	border: 1px solid #e0e4ea;
+	border-radius: 6px;
+	color: #4c4444;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background .15s, border-color .15s;
+}
+
+.duf-filter-toggle:hover {
+	background: #eaeaea;
+	border-color: #c8d0dc;
+}
+
+.duf-filter-toggle__badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	background: #006ebb;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 800;
+	border-radius: 999px;
+	line-height: 1;
+}
+
+.duf-offcanvas {
+	width: min(340px, 92vw) !important;
+	border-right: 1px solid #edf1f4 !important;
+}
+
+.duf-offcanvas .offcanvas-header {
+	height: 64px;
+	padding: 0 20px;
+	border-bottom: 1px solid #edf1f4;
+}
+
+.duf-offcanvas__title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #0d1f3c;
+	text-transform: uppercase;
+	letter-spacing: .04em;
+}
+
+.duf-offcanvas .offcanvas-body {
+	padding: 20px;
+	overflow-y: auto;
+}
+
+.duf-offcanvas .accordion-button {
+	font-size: 13px;
+	font-weight: 700;
+	color: #4c4444;
+	background: transparent !important;
+	box-shadow: none !important;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.duf-offcanvas .accordion-button:not(.collapsed) {
+	color: #006ebb;
+}
+
+.duf-offcanvas .accordion-item {
+	background: transparent;
+}
+
+.duf-vfilter .form-check,
+.duf-offcanvas .form-check {
+	display: flex;
+	align-items: center;
+	min-height: 28px;
+	margin-bottom: 4px;
+}
+
+.duf-vfilter .form-check-input,
+.duf-offcanvas .form-check-input {
+	margin-top: 0;
+	margin-right: 7px;
+	border-color: #d0d8e4;
+}
+
+.duf-vfilter .form-check-input:checked,
+.duf-offcanvas .form-check-input:checked {
+	background-color: #006ebb;
+	border-color: #006ebb;
+}
+
+.duf-vfilter .form-check-label,
+.duf-offcanvas .form-check-label {
+	color: #4c4444;
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+.duf-vfilter .dharma-filter-option-unavailable,
+.duf-vfilter .dharma-filter-option-disabled,
+.duf-offcanvas .dharma-filter-option-unavailable,
+.duf-offcanvas .dharma-filter-option-disabled {
+	opacity: .45;
+}
+
+.dharma-filter-price-slider__range {
+	background: transparent;
+	pointer-events: none;
+}
+
+.dharma-filter-price-slider__range::-webkit-slider-thumb {
+	pointer-events: auto;
+	position: relative;
+	z-index: 5;
+}
+
+.dharma-filter-price-slider__range::-moz-range-thumb {
+	pointer-events: auto;
+	position: relative;
+	z-index: 5;
+}
+
+@media (max-width: 767px) {
+	.duf-hfilter {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.duf-hfilter__group--grow,
+	.duf-hfilter__group--price {
+		flex: 1 1 auto;
+	}
+
+	.duf-hfilter__divider {
+		width: 100%;
+		height: 1px;
+	}
+
+	.duf-hfilter input[type="text"],
+	.duf-hfilter input[type="number"] {
+		width: 100%;
+	}
+
+	.duf-hfilter__actions {
+		flex-direction: column;
+	}
+
+	.duf-hfilter__btn {
+		justify-content: center;
+	}
+}

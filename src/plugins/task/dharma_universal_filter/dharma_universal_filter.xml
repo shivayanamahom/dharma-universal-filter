@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="task" method="upgrade">
+	<name>plg_task_dharma_universal_filter</name>
+	<author>Dharma Design</author>
+	<creationDate>May 2026</creationDate>
+	<copyright>Copyright © 2026 Dharma Design. All rights reserved.</copyright>
+	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<version>0.1.0</version>
+	<description>PLG_TASK_DHARMA_UNIVERSAL_FILTER_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Plugin\Task\DharmaUniversalFilter</namespace>
+	<scriptfile>script.php</scriptfile>
+	<files>
+		<filename>script.php</filename>
+		<folder plugin="dharma_universal_filter">services</folder>
+		<folder>src</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_task_dharma_universal_filter.ini</language>
+		<language tag="en-GB">language/en-GB/plg_task_dharma_universal_filter.sys.ini</language>
+		<language tag="ru-RU">language/ru-RU/plg_task_dharma_universal_filter.ini</language>
+		<language tag="ru-RU">language/ru-RU/plg_task_dharma_universal_filter.sys.ini</language>
+	</languages>
+</extension>

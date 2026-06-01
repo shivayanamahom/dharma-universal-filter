@@ -1,0 +1,28 @@
+{
+	"$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+	"name": "mod_dharma_universal_filter",
+	"version": "0.1.0",
+	"description": "Dharma Design universal products filter module",
+	"license": "GPL-3.0-or-later",
+	"assets": [
+		{
+			"name": "mod_dharma_universal_filter.ajax",
+			"type": "script",
+			"uri": "mod_dharma_universal_filter/js/ajax.min.js",
+			"dependencies": [
+				"core"
+			],
+			"attributes": {
+				"defer": true,
+				"type": "module"
+			},
+			"version": "auto"
+		},
+		{
+			"name": "mod_dharma_universal_filter.filter",
+			"type": "style",
+			"uri": "mod_dharma_universal_filter/css/filter.css",
+			"version": "auto"
+		}
+	]
+}
