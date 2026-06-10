@@ -212,8 +212,8 @@ return new class () implements ServiceProviderInterface {
 
 					$layout = (string) ($params['layout'] ?? '');
 					$newLayout = match ($layout) {
-						'horizont', '_:horizont', 'cassiopeia_dominant:horizont', 'horizontal', 'cassiopeia_dominant:horizontal' => '_:horizontal',
-						'default', '_:default', 'cassiopeia_dominant:default', 'vertical', 'cassiopeia_dominant:vertical', '' => '_:vertical',
+						'horizont', '_:horizont', '_horizont', 'cassiopeia_dominant:horizont', 'horizontal', '_horizontal', 'cassiopeia_dominant:horizontal' => '_:horizontal',
+						'default', '_:default', 'cassiopeia_dominant:default', 'vertical', '_vertical', 'cassiopeia_dominant:vertical', '' => '_:vertical',
 						default => $layout,
 					};
 

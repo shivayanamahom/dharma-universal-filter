@@ -28,6 +28,7 @@ The project is currently focused on real catalog pages where filters need to sta
 
 ## Package Contents
 
+- `lib_dharma_universal_filter` - shared library with the `Indexer` class used by both plugins; owns the index database schema.
 - `mod_dharma_universal_filter` - site module that renders the filter UI.
 - `plg_system_dharma_universal_filter` - system plugin that keeps product index data up to date after product saves and exposes reindex tooling.
 - `plg_task_dharma_universal_filter` - scheduled task plugin for full or incremental reindexing.
@@ -41,7 +42,8 @@ The project is currently focused on real catalog pages where filters need to sta
 - Vertical and horizontal module layouts.
 - Field layouts for select, checkbox list, checkbox dropdown, radio buttons, price inputs, and price slider.
 - AJAX filtering with optional instant apply or explicit apply button.
-- Cascading availability logic.
+- Cascading availability logic that disables (or hides) values and whole fields that have no matching products for the current selection.
+- Shared indexer with transactional, batched reindexing and automatic read-cache invalidation.
 - Optional product counts next to filter values.
 - Optional mobile/offcanvas filter mode.
 - Optional sticky horizontal filter with configurable top offset.
@@ -67,6 +69,8 @@ The project is currently focused on real catalog pages where filters need to sta
 
 ```text
 src/
+  libraries/
+    dharma_universal_filter/
   modules/
     mod_dharma_universal_filter/
   plugins/
@@ -90,18 +94,20 @@ powershell -ExecutionPolicy Bypass -File .\build\build-package.ps1
 The script creates installable ZIP archives in `dist/`, including the package archive:
 
 ```text
-dist/pkg_dharma_universal_filter_0.1.0.zip
+dist/pkg_dharma_universal_filter_0.2.0.zip
 ```
 
 ## Installation
 
-Install `dist/pkg_dharma_universal_filter_0.1.0.zip` through Joomla administrator:
+Install `dist/pkg_dharma_universal_filter_0.2.0.zip` through Joomla administrator:
 
 ```text
 System -> Install -> Extensions
 ```
 
-During installation/update the package script creates the index tables and enables the system/task plugins.
+During installation/update the bundled library creates the index tables and the package script enables the system/task plugins.
+
+> Filter output depends on the request query string, so the module ships with caching disabled. When upgrading an existing module instance, set its **Caching** to **No caching** in the module's Advanced tab, otherwise static module output caching will freeze the cascade.
 
 ## Development Notes
 

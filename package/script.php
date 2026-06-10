@@ -2,7 +2,7 @@
 /*
  * @package     Dharma Universal Filter Package
  * @subpackage  pkg_dharma_universal_filter
- * @version     0.1.0
+ * @version     0.2.0
  * @author      Dharma Design
  * @copyright   Copyright (c) 2026 Dharma Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -77,41 +77,31 @@ return new class implements ServiceProviderInterface {
 				$db->setQuery($query)->execute();
 			}
 
+			/**
+			 * Creates the index tables from the bundled library schema. The
+			 * lib_dharma_universal_filter library (installed first in this package)
+			 * owns sql/install.mysql.utf8.sql as the single source of truth.
+			 *
+			 * @return  void
+			 */
 			private function ensureTables(): void
 			{
-				$db = Factory::getContainer()->get(DatabaseInterface::class);
-				$db->setQuery(
-					'CREATE TABLE IF NOT EXISTS ' . $db->quoteName('#__dharma_universal_filter_index') . ' (
-						' . $db->quoteName('id') . ' BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-						' . $db->quoteName('category_id') . ' INT UNSIGNED NOT NULL DEFAULT 0,
-						' . $db->quoteName('item_id') . ' INT UNSIGNED NOT NULL DEFAULT 0,
-						' . $db->quoteName('field_name') . ' VARCHAR(191) NOT NULL DEFAULT \'\',
-						' . $db->quoteName('field_value') . ' VARCHAR(255) NOT NULL DEFAULT \'\',
-						' . $db->quoteName('field_value_hash') . ' CHAR(40) NOT NULL DEFAULT \'\',
-						' . $db->quoteName('language') . ' VARCHAR(7) NOT NULL DEFAULT \'*\',
-						' . $db->quoteName('in_stock') . ' TINYINT NOT NULL DEFAULT 0,
-						PRIMARY KEY (' . $db->quoteName('id') . '),
-						KEY ' . $db->quoteName('idx_duf_category_field_value') . ' (' . $db->quoteName('category_id') . ', ' . $db->quoteName('field_name') . ', ' . $db->quoteName('field_value_hash') . '),
-						KEY ' . $db->quoteName('idx_duf_category_item') . ' (' . $db->quoteName('category_id') . ', ' . $db->quoteName('item_id') . '),
-						KEY ' . $db->quoteName('idx_duf_field_item') . ' (' . $db->quoteName('field_name') . ', ' . $db->quoteName('item_id') . ')
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci'
-				)->execute();
+				$file = JPATH_LIBRARIES . '/dharma_universal_filter/sql/install.mysql.utf8.sql';
+				if (!is_file($file))
+				{
+					return;
+				}
 
-				$db->setQuery(
-					'CREATE TABLE IF NOT EXISTS ' . $db->quoteName('#__dharma_universal_filter_price_index') . ' (
-						' . $db->quoteName('id') . ' BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-						' . $db->quoteName('category_id') . ' INT UNSIGNED NOT NULL DEFAULT 0,
-						' . $db->quoteName('item_id') . ' INT UNSIGNED NOT NULL DEFAULT 0,
-						' . $db->quoteName('currency') . ' VARCHAR(32) NOT NULL DEFAULT \'\',
-						' . $db->quoteName('price_min') . ' DECIMAL(20,6) NOT NULL DEFAULT 0,
-						' . $db->quoteName('price_max') . ' DECIMAL(20,6) NOT NULL DEFAULT 0,
-						' . $db->quoteName('language') . ' VARCHAR(7) NOT NULL DEFAULT \'*\',
-						' . $db->quoteName('in_stock') . ' TINYINT NOT NULL DEFAULT 0,
-						PRIMARY KEY (' . $db->quoteName('id') . '),
-						KEY ' . $db->quoteName('idx_duf_price_category_currency') . ' (' . $db->quoteName('category_id') . ', ' . $db->quoteName('currency') . '),
-						KEY ' . $db->quoteName('idx_duf_price_category_item') . ' (' . $db->quoteName('category_id') . ', ' . $db->quoteName('item_id') . ')
-					) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE=utf8mb4_unicode_ci'
-				)->execute();
+				$db  = Factory::getContainer()->get(DatabaseInterface::class);
+				$sql = (string) file_get_contents($file);
+				foreach ($db->splitSql($sql) as $statement)
+				{
+					$statement = trim($statement);
+					if ($statement !== '')
+					{
+						$db->setQuery($statement)->execute();
+					}
+				}
 			}
 		});
 	}

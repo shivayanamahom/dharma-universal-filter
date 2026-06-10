@@ -1,7 +1,7 @@
 <?php
 /*
- * @package     Dharma Universal Filter System Plugin
- * @subpackage  plg_system_dharma_universal_filter
+ * @package     Dharma Universal Filter Library
+ * @subpackage  lib_dharma_universal_filter
  * @version     0.2.0
  * @author      Dharma Design
  * @copyright   Copyright (c) 2026 Dharma Design. All rights reserved.
@@ -29,22 +29,21 @@ return new class implements ServiceProviderInterface {
 
 			public function install(InstallerAdapter $adapter): bool
 			{
-				$this->ensureTables();
-				$this->enablePlugin('system', 'dharma_universal_filter');
+				$this->runSqlFile('install.mysql.utf8.sql');
 
 				return true;
 			}
 
 			public function update(InstallerAdapter $adapter): bool
 			{
-				$this->ensureTables();
-				$this->enablePlugin('system', 'dharma_universal_filter');
+				$this->runSqlFile('install.mysql.utf8.sql');
 
 				return true;
 			}
 
 			public function uninstall(InstallerAdapter $adapter): bool
 			{
+				// Keep indexed data on uninstall by default; drop only when explicitly desired.
 				return true;
 			}
 
@@ -55,42 +54,44 @@ return new class implements ServiceProviderInterface {
 
 			public function postflight(string $type, InstallerAdapter $adapter): bool
 			{
-				$this->ensureTables();
-				$this->enablePlugin('system', 'dharma_universal_filter');
+				if (in_array($type, ['install', 'update'], true))
+				{
+					$this->runSqlFile('install.mysql.utf8.sql');
+				}
 
 				return true;
 			}
 
-			private function enablePlugin(string $folder, string $element): void
-			{
-				$db = Factory::getContainer()->get(DatabaseInterface::class);
-				$query = $db->getQuery(true)
-					->update($db->quoteName('#__extensions'))
-					->set($db->quoteName('enabled') . ' = 1')
-					->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
-					->where($db->quoteName('folder') . ' = ' . $db->quote($folder))
-					->where($db->quoteName('element') . ' = ' . $db->quote($element));
-
-				$db->setQuery($query)->execute();
-			}
-
 			/**
-			 * Best-effort table creation. The lib_dharma_universal_filter library is the
-			 * canonical owner of the schema; this only guards against the plugin being
-			 * installed before the library inside the same package.
+			 * Executes the statements of a packaged SQL file.
+			 *
+			 * @param   string  $file  File name inside the library sql folder.
 			 *
 			 * @return  void
 			 */
-			private function ensureTables(): void
+			private function runSqlFile(string $file): void
 			{
-				$file = JPATH_LIBRARIES . '/dharma_universal_filter/sql/install.mysql.utf8.sql';
-				if (!is_file($file))
+				$paths = [
+					JPATH_LIBRARIES . '/dharma_universal_filter/sql/' . $file,
+					__DIR__ . '/sql/' . $file,
+				];
+
+				$sql = '';
+				foreach ($paths as $path)
+				{
+					if (is_file($path))
+					{
+						$sql = (string) file_get_contents($path);
+						break;
+					}
+				}
+
+				if ($sql === '')
 				{
 					return;
 				}
 
-				$db  = Factory::getContainer()->get(DatabaseInterface::class);
-				$sql = (string) file_get_contents($file);
+				$db = Factory::getContainer()->get(DatabaseInterface::class);
 				foreach ($db->splitSql($sql) as $statement)
 				{
 					$statement = trim($statement);

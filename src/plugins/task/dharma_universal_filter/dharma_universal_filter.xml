@@ -5,7 +5,7 @@
 	<creationDate>May 2026</creationDate>
 	<copyright>Copyright © 2026 Dharma Design. All rights reserved.</copyright>
 	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<description>PLG_TASK_DHARMA_UNIVERSAL_FILTER_XML_DESCRIPTION</description>
 	<namespace path="src">Joomla\Plugin\Task\DharmaUniversalFilter</namespace>
 	<scriptfile>script.php</scriptfile>

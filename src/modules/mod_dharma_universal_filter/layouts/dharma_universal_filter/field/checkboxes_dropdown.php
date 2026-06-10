@@ -51,7 +51,9 @@ $input = preg_replace('/\s+onchange=(["\']).*?\1/i', '', $form->getInput($name, 
 		<?php endif; ?>
 	</summary>
 	<div class="duf-checkselect__panel">
-		<?php echo $input; ?>
+		<div class="duf-checkselect__options">
+			<?php echo $input; ?>
+		</div>
 		<?php if ($submitMode === 'apply'): ?>
 			<button type="button" class="duf-checkselect__apply" data-duf-checkselect-apply>
 				<?php echo Text::_('MOD_DHARMA_UNIVERSAL_FILTER_APPLY'); ?>

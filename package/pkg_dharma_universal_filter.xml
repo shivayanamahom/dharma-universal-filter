@@ -3,15 +3,16 @@
 	<name>PKG_DHARMA_UNIVERSAL_FILTER</name>
 	<packagename>dharma_universal_filter</packagename>
 	<author>Dharma Design</author>
-	<creationDate>May 2026</creationDate>
+	<creationDate>June 2026</creationDate>
 	<copyright>Copyright (c) 2026 Dharma Design. All rights reserved.</copyright>
 	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
-	<version>0.1.0</version>
-	<description>Dharma Universal Filter package with site module, system reindex plugin and scheduled index task plugin.</description>
+	<version>0.2.0</version>
+	<description>Dharma Universal Filter package with shared indexing library, site module, system reindex plugin and scheduled index task plugin.</description>
 	<scriptfile>script.php</scriptfile>
 	<files folder="packages">
-		<file type="module" client="site" id="mod_dharma_universal_filter">mod_dharma_universal_filter_0.1.0.zip</file>
-		<file type="plugin" group="system" id="dharma_universal_filter">plg_system_dharma_universal_filter_0.1.0.zip</file>
-		<file type="plugin" group="task" id="dharma_universal_filter">plg_task_dharma_universal_filter_0.1.0.zip</file>
+		<file type="library" id="dharma_universal_filter">lib_dharma_universal_filter_0.2.0.zip</file>
+		<file type="module" client="site" id="mod_dharma_universal_filter">mod_dharma_universal_filter_0.2.0.zip</file>
+		<file type="plugin" group="system" id="dharma_universal_filter">plg_system_dharma_universal_filter_0.2.0.zip</file>
+		<file type="plugin" group="task" id="dharma_universal_filter">plg_task_dharma_universal_filter_0.2.0.zip</file>
 	</files>
 </extension>

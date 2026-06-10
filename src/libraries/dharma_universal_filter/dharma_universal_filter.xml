@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="library" method="upgrade">
+	<name>lib_dharma_universal_filter</name>
+	<libraryname>dharma_universal_filter</libraryname>
+	<author>Dharma Design</author>
+	<creationDate>June 2026</creationDate>
+	<copyright>Copyright (c) 2026 Dharma Design. All rights reserved.</copyright>
+	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<version>0.2.0</version>
+	<description>Shared indexing library for the Dharma Universal Filter module and plugins. Owns the filter index tables.</description>
+	<namespace path="src">Dharma\UniversalFilter</namespace>
+	<scriptfile>script.php</scriptfile>
+	<files>
+		<filename>script.php</filename>
+		<folder>src</folder>
+		<folder>sql</folder>
+	</files>
+</extension>

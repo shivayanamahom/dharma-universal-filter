@@ -21,6 +21,12 @@ use Joomla\Plugin\Task\DharmaUniversalFilter\Extension\DharmaUniversalFilter;
 
 require_once \dirname(__DIR__) . '/src/Extension/DharmaUniversalFilter.php';
 
+// Safety net in case the library namespace map has not been refreshed yet.
+if (!class_exists(\Dharma\UniversalFilter\Indexer::class) && is_file(JPATH_LIBRARIES . '/dharma_universal_filter/src/Indexer.php'))
+{
+	require_once JPATH_LIBRARIES . '/dharma_universal_filter/src/Indexer.php';
+}
+
 return new class implements ServiceProviderInterface {
 	/**
 	 * Registers services.

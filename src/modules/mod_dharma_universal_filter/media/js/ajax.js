@@ -111,6 +111,12 @@ document.addEventListener('change', function (event) {
 });
 
 document.addEventListener('click', function (event) {
+  if (event.target.closest && !event.target.closest('[data-duf-checkselect]')) {
+    document.querySelectorAll('[data-duf-checkselect][open]').forEach(function (details) {
+      details.removeAttribute('open');
+    });
+  }
+
   var clear = event.target.closest ? event.target.closest('[data-duf-checkselect-clear]') : null;
   if (clear && window.DharmaUniversalFilter) {
     event.preventDefault();
@@ -213,8 +219,10 @@ window.DharmaUniversalFilter = {
                 }
               }
             });
-            var pateTitle = newHtml.querySelector('#pageTitle').getAttribute('content'),
-              pageUrl = newHtml.querySelector('#pageUrl').getAttribute('content');
+            var pageTitleEl = newHtml.querySelector('#pageTitle'),
+              pageUrlEl = newHtml.querySelector('#pageUrl');
+            var pateTitle = pageTitleEl ? pageTitleEl.getAttribute('content') : '',
+              pageUrl = pageUrlEl ? pageUrlEl.getAttribute('content') : '';
             if (pateTitle) {
               document.title = pateTitle;
               window.history.pushState('FormData', pateTitle, pageUrl);

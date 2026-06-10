@@ -5,7 +5,7 @@
 	<creationDate>May 2026</creationDate>
 	<copyright>Copyright © 2026 Dharma Design. All rights reserved.</copyright>
 	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<description>MOD_DHARMA_UNIVERSAL_FILTER_DESCRIPTION</description>
 	<namespace path="src">Joomla\Module\DharmaUniversalFilter</namespace>
 	<scriptfile>script.php</scriptfile>
@@ -38,7 +38,7 @@
 					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_LAYOUT"
 					   class="form-select"
 					   default="_:vertical"
-					   filter="cmd">
+					   filter="string">
 					<option value="_:vertical">MOD_DHARMA_UNIVERSAL_FILTER_LAYOUT_VERTICAL</option>
 					<option value="_:horizontal">MOD_DHARMA_UNIVERSAL_FILTER_LAYOUT_HORIZONTAL</option>
 				</field>
@@ -107,7 +107,7 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>
-				<field name="price_display" type="list"
+<field name="price_display" type="list"
 					   label="MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_PRICE_DISPLAY"
 					   default="inputs">
 					<option value="inputs">MOD_DHARMA_UNIVERSAL_FILTER_PARAMS_PRICE_DISPLAY_INPUTS</option>
@@ -194,7 +194,7 @@
 				<field name="cache" type="list"
 					   label="COM_MODULES_FIELD_CACHING_LABEL"
 					   description="COM_MODULES_FIELD_CACHING_DESC"
-					   default="1">
+					   default="0">
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
 				</field>

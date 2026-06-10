@@ -1,5 +1,5 @@
 param(
-    [string] $Version = "0.1.0"
+    [string] $Version = "0.2.0"
 )
 
 $ErrorActionPreference = "Stop"
@@ -40,10 +40,15 @@ function New-ZipFromDirectory {
     Compress-Archive -Path (Join-Path $Source "*") -DestinationPath $Destination -CompressionLevel Optimal
 }
 
+$libraryZip = "lib_dharma_universal_filter_$Version.zip"
 $moduleZip = "mod_dharma_universal_filter_$Version.zip"
 $systemZip = "plg_system_dharma_universal_filter_$Version.zip"
 $taskZip = "plg_task_dharma_universal_filter_$Version.zip"
 $packageZip = "pkg_dharma_universal_filter_$Version.zip"
+
+New-ZipFromDirectory `
+    -Source (Join-Path $root "src\libraries\dharma_universal_filter") `
+    -Destination (Join-Path $dist $libraryZip)
 
 New-ZipFromDirectory `
     -Source (Join-Path $root "src\modules\mod_dharma_universal_filter") `
@@ -63,6 +68,7 @@ New-Item -ItemType Directory -Force -Path $packageFiles | Out-Null
 
 Copy-Item -LiteralPath (Join-Path $root "package\pkg_dharma_universal_filter.xml") -Destination $packageRoot -Force
 Copy-Item -LiteralPath (Join-Path $root "package\script.php") -Destination $packageRoot -Force
+Copy-Item -LiteralPath (Join-Path $dist $libraryZip) -Destination $packageFiles -Force
 Copy-Item -LiteralPath (Join-Path $dist $moduleZip) -Destination $packageFiles -Force
 Copy-Item -LiteralPath (Join-Path $dist $systemZip) -Destination $packageFiles -Force
 Copy-Item -LiteralPath (Join-Path $dist $taskZip) -Destination $packageFiles -Force

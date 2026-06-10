@@ -13,6 +13,7 @@ namespace Joomla\Module\DharmaUniversalFilter\Site\Helper;
 
 \defined('_JEXEC') or die;
 
+use Joomla\CMS\Cache\CacheControllerFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Multilanguage;
@@ -247,6 +248,7 @@ class DharmaUniversalFilterHelper
 		$emptyMode = $params ? (string) $params->get('empty_options_mode', 'hide') : 'hide';
 		$showOptionCounts = $params ? (int) $params->get('show_option_counts', 0) === 1 : false;
 		$hasCurrentFilters = count($currentFilters) > 0;
+		$optionsEmptyMode = ($pk <= 1 && !$hasCurrentFilters) ? 'hide' : $emptyMode;
 
 		if ($available['count'] === 0)
 		{
@@ -286,7 +288,7 @@ class DharmaUniversalFilterHelper
 			foreach (['categories', 'manufacturers', 'badges'] as $fieldName)
 			{
 				$fieldAvailable = $hasCurrentFilters
-					? $this->getAvailableFilterData($pk, $this->getFiltersWithoutField($currentFilters, $fieldName))
+					? $this->getAvailableFilterData($pk, $this->getFiltersWithoutField($currentFilters, $fieldName), false)
 					: $available;
 				$this->applyOptionCounts($form, $fieldName, 'filter', $fieldAvailable['categories']);
 			}
@@ -297,9 +299,9 @@ class DharmaUniversalFilterHelper
 			foreach (['categories', 'manufacturers', 'badges'] as $fieldName)
 			{
 				$fieldAvailable = $hasCurrentFilters
-					? $this->getAvailableFilterData($pk, $this->getFiltersWithoutField($currentFilters, $fieldName))
+					? $this->getAvailableFilterData($pk, $this->getFiltersWithoutField($currentFilters, $fieldName), false)
 					: $available;
-				$this->filterFormOptions($form, $fieldName, 'filter', $fieldAvailable['categories'], $emptyMode);
+				$this->filterFormOptions($form, $fieldName, 'filter', $fieldAvailable['categories'], $optionsEmptyMode);
 			}
 		}
 
@@ -313,7 +315,7 @@ class DharmaUniversalFilterHelper
 				}
 
 				$fieldAvailable = $hasCurrentFilters
-					? $this->getAvailableFilterData($pk, $this->getFiltersWithoutField($currentFilters, $field->fieldname, true))
+					? $this->getAvailableFilterData($pk, $this->getFiltersWithoutField($currentFilters, $field->fieldname, true), false)
 					: $available;
 				$values = $fieldAvailable['fields'][$field->fieldname] ?? [];
 				if ($showOptionCounts)
@@ -323,13 +325,19 @@ class DharmaUniversalFilterHelper
 
 				if (count($values) === 0)
 				{
-					if ($emptyMode === 'hide')
+					if ($optionsEmptyMode === 'hide')
 					{
 						$form->removeField($field->fieldname, $field->group);
 					}
-					elseif ($emptyMode === 'disable')
+					elseif ($optionsEmptyMode === 'disable')
 					{
 						$form->setFieldAttribute($field->fieldname, 'disabled', 'true', $field->group);
+
+						// Disable each option too: the custom checkbox/list layouts honour
+						// per-option state, not the field-level "disabled" attribute. Without
+						// this, a field whose values are all incompatible with the active
+						// filters would still render as fully active.
+						$this->filterFormOptions($form, $field->fieldname, $field->group, [], 'disable');
 					}
 
 					continue;
@@ -337,7 +345,7 @@ class DharmaUniversalFilterHelper
 
 				if ($emptyMode !== 'show')
 				{
-					$this->filterFormOptions($form, $field->fieldname, $field->group, $values, $emptyMode);
+					$this->filterFormOptions($form, $field->fieldname, $field->group, $values, $optionsEmptyMode);
 				}
 			}
 		}
@@ -618,11 +626,20 @@ class DharmaUniversalFilterHelper
 				'text'       => (string) $option,
 				'attributes' => $attributes,
 				'disabled'   => !empty($attributes['disabled']) || !empty($attributes['disable']),
+				'order'      => count($options),
 			];
 		}
 
 		usort($options, static function (array $a, array $b): int {
-			return (int) $a['disabled'] <=> (int) $b['disabled'];
+			$disabled = (int) $a['disabled'] <=> (int) $b['disabled'];
+			if ($disabled !== 0)
+			{
+				return $disabled;
+			}
+
+			$sort = strnatcasecmp($a['attributes']['value'] ?? $a['text'], $b['attributes']['value'] ?? $b['text']);
+
+			return $sort !== 0 ? $sort : $a['order'] <=> $b['order'];
 		});
 
 		for ($i = count($fieldXml->option) - 1; $i >= 0; $i--)
@@ -643,7 +660,9 @@ class DharmaUniversalFilterHelper
 	/**
 	 * Gets available filter values from published products in the active category.
 	 *
-	 * @param   int  $pk  Category id.
+	 * @param   int    $pk              Category id.
+	 * @param   array  $currentFilters  Active request filters.
+	 * @param   bool   $includePrice    Whether to calculate price range data.
 	 *
 	 * @throws  \Exception
 	 *
@@ -651,20 +670,61 @@ class DharmaUniversalFilterHelper
 	 *
 	 * @since  0.1.0
 	 */
-	protected function getAvailableFilterData(int $pk, array $currentFilters = []): array
+	protected function getAvailableFilterData(int $pk, array $currentFilters = [], bool $includePrice = true): array
 	{
 		if ($this->_availableFilterData === null)
 		{
 			$this->_availableFilterData = [];
 		}
 
-		$cacheKey = $pk . ':' . md5(json_encode($currentFilters));
+		$filtersHash = md5(json_encode($currentFilters));
+		$cacheKey = $pk . ':' . ($includePrice ? 'price' : 'no-price') . ':' . $filtersHash;
 		if (isset($this->_availableFilterData[$cacheKey]))
 		{
 			return $this->_availableFilterData[$cacheKey];
 		}
 
-		$indexed = $this->getIndexedAvailableFilterData($pk, $currentFilters);
+		$priceCacheKey = $pk . ':price:' . $filtersHash;
+		if (!$includePrice && isset($this->_availableFilterData[$priceCacheKey]))
+		{
+			return $this->_availableFilterData[$priceCacheKey];
+		}
+
+		// Use persistent cache for unfiltered data — it only changes when the index is rebuilt.
+		$noActiveFilters = count($currentFilters) === 0;
+		if ($noActiveFilters)
+		{
+			try
+			{
+				/** @var \Joomla\CMS\Cache\Controller\CallbackController $persistentCache */
+				$persistentCache = Factory::getContainer()
+					->get(CacheControllerFactoryInterface::class)
+					->createCacheController('callback', ['defaultgroup' => 'mod_dharma_universal_filter', 'caching' => true, 'lifetime' => 15]);
+
+				$langKey      = $this->getLanguageCacheKey();
+				$persistKey   = $pk . ':' . ($includePrice ? 'price' : 'no-price') . ':' . $langKey;
+				$cachedResult = $persistentCache->get(
+					function () use ($pk, $currentFilters, $includePrice): ?array {
+						return $this->getIndexedAvailableFilterData($pk, $currentFilters, $includePrice);
+					},
+					[],
+					$persistKey
+				);
+
+				if ($cachedResult !== null)
+				{
+					$this->_availableFilterData[$cacheKey] = $cachedResult;
+
+					return $cachedResult;
+				}
+			}
+			catch (\Throwable)
+			{
+				// Fall through to normal flow if cache is unavailable.
+			}
+		}
+
+		$indexed = $this->getIndexedAvailableFilterData($pk, $currentFilters, $includePrice);
 		if ($indexed !== null)
 		{
 			$this->_availableFilterData[$cacheKey] = $indexed;
@@ -712,24 +772,27 @@ class DharmaUniversalFilterHelper
 				$result['categories'][$value] = (int) ($result['categories'][$value] ?? 0) + 1;
 			}
 
-			foreach ($this->decodeJsonObject((string) $row->filter_prices) as $price)
+			if ($includePrice)
 			{
-				if (is_array($price) && !empty($price['max']) && (float) $price['max'] > 0)
+				foreach ($this->decodeJsonObject((string) $row->filter_prices) as $price)
 				{
-					$result['has_price'] = true;
-					$min = !empty($price['min']) ? (float) $price['min'] : 0;
-					$max = (float) $price['max'];
-					if ($min > 0 && ($result['price_min'] === 0 || $min < $result['price_min']))
+					if (is_array($price) && !empty($price['max']) && (float) $price['max'] > 0)
 					{
-						$result['price_min'] = $min;
-					}
+						$result['has_price'] = true;
+						$min = !empty($price['min']) ? (float) $price['min'] : 0;
+						$max = (float) $price['max'];
+						if ($min > 0 && ($result['price_min'] === 0 || $min < $result['price_min']))
+						{
+							$result['price_min'] = $min;
+						}
 
-					if ($max > $result['price_max'])
-					{
-						$result['price_max'] = $max;
-					}
+						if ($max > $result['price_max'])
+						{
+							$result['price_max'] = $max;
+						}
 
-					break;
+						break;
+					}
 				}
 			}
 
@@ -763,12 +826,13 @@ class DharmaUniversalFilterHelper
 	 *
 	 * @param   int    $pk              Category id.
 	 * @param   array  $currentFilters  Active request filters.
+	 * @param   bool   $includePrice    Whether to calculate price range data.
 	 *
 	 * @return  array|null  Indexed data, or null when indexes are not available.
 	 *
 	 * @since  0.1.0
 	 */
-	protected function getIndexedAvailableFilterData(int $pk, array $currentFilters = []): ?array
+	protected function getIndexedAvailableFilterData(int $pk, array $currentFilters = [], bool $includePrice = true): ?array
 	{
 		try
 		{
@@ -806,18 +870,23 @@ class DharmaUniversalFilterHelper
 			'fields'     => [],
 		];
 
+		$restrictToItemIds = count($currentFilters) > 0;
 		$categoryFields = ['categories', 'manufacturers', 'badges'];
 		$query = $db->getQuery(true)
 			->select([
 				$db->quoteName('field_name'),
-				$db->quoteName('field_value'),
+				'ANY_VALUE(' . $db->quoteName('field_value') . ') AS ' . $db->quoteName('field_value'),
 				'COUNT(DISTINCT ' . $db->quoteName('item_id') . ') AS ' . $db->quoteName('option_count'),
 			])
 			->from($db->quoteName('#__dharma_universal_filter_index'))
 			->where($db->quoteName('category_id') . ' = :category_id')
-			->whereIn($db->quoteName('item_id'), $itemIds, ParameterType::INTEGER)
-			->group($db->quoteName(['field_name', 'field_value']))
+			->group($db->quoteName(['field_name', 'field_value_hash']))
 			->bind(':category_id', $pk, ParameterType::INTEGER);
+
+		if ($restrictToItemIds)
+		{
+			$query->whereIn($db->quoteName('item_id'), $itemIds, ParameterType::INTEGER);
+		}
 
 		$this->addIndexedLanguageFilter($query);
 
@@ -845,28 +914,35 @@ class DharmaUniversalFilterHelper
 			$result['fields'][$fieldName][$value] = (int) $row->option_count;
 		}
 
-		$currency = PriceHelper::getCurrency($this->getCurrentFilters()['currency'] ?? null);
-		$currencyGroup = (string) $currency['group'];
-		$query = $db->getQuery(true)
-			->select([
-				'MIN(NULLIF(' . $db->quoteName('price_min') . ', 0)) AS ' . $db->quoteName('price_min'),
-				'MAX(' . $db->quoteName('price_max') . ') AS ' . $db->quoteName('price_max'),
-			])
-			->from($db->quoteName('#__dharma_universal_filter_price_index'))
-			->where($db->quoteName('category_id') . ' = :category_id')
-			->where($db->quoteName('currency') . ' = :currency')
-			->whereIn($db->quoteName('item_id'), $itemIds, ParameterType::INTEGER)
-			->bind(':category_id', $pk, ParameterType::INTEGER)
-			->bind(':currency', $currencyGroup);
-
-		$this->addIndexedLanguageFilter($query);
-
-		$price = $db->setQuery($query)->loadObject();
-		if ($price && (float) $price->price_max > 0)
+		if ($includePrice)
 		{
-			$result['has_price'] = true;
-			$result['price_min'] = $price->price_min !== null ? (float) $price->price_min : 0;
-			$result['price_max'] = (float) $price->price_max;
+			$currency = PriceHelper::getCurrency($this->getCurrentFilters()['currency'] ?? null);
+			$currencyGroup = (string) $currency['group'];
+			$query = $db->getQuery(true)
+				->select([
+					'MIN(NULLIF(' . $db->quoteName('price_min') . ', 0)) AS ' . $db->quoteName('price_min'),
+					'MAX(' . $db->quoteName('price_max') . ') AS ' . $db->quoteName('price_max'),
+				])
+				->from($db->quoteName('#__dharma_universal_filter_price_index'))
+				->where($db->quoteName('category_id') . ' = :category_id')
+				->where($db->quoteName('currency') . ' = :currency')
+				->bind(':category_id', $pk, ParameterType::INTEGER)
+				->bind(':currency', $currencyGroup);
+
+			if ($restrictToItemIds)
+			{
+				$query->whereIn($db->quoteName('item_id'), $itemIds, ParameterType::INTEGER);
+			}
+
+			$this->addIndexedLanguageFilter($query);
+
+			$price = $db->setQuery($query)->loadObject();
+			if ($price && (float) $price->price_max > 0)
+			{
+				$result['has_price'] = true;
+				$result['price_min'] = $price->price_min !== null ? (float) $price->price_min : 0;
+				$result['price_max'] = (float) $price->price_max;
+			}
 		}
 
 		return $result;
