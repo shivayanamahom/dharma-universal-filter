@@ -1,24 +1,24 @@
-# Roadmap
+# Дорожная карта
 
-## Near Term
+## Ближайшие планы
 
-- Add automated smoke checks for package structure.
-- Add documented template override examples.
-- Improve accessibility for dropdown checkbox controls and offcanvas filters.
-- Add more screenshots and short usage videos.
-- Add query benchmarks for larger RadicalMart catalogs.
+- Добавить автоматические smoke-проверки структуры пакета.
+- Добавить документированные примеры переопределения шаблонов.
+- Улучшить доступность для дропдаун-чекбоксов и offcanvas-фильтров.
+- Добавить больше скриншотов и коротких видео по использованию.
+- Добавить замеры запросов для крупных каталогов RadicalMart.
 
-## Medium Term
+## Среднесрочные планы
 
-- Add test fixtures for option availability and cascading filter logic.
-- Add CLI or task options for partial reindexing by category or product IDs.
-- Add import/export examples for common module configurations.
-- Improve styling hooks for third-party templates.
-- Add more language packs.
+- Добавить тестовые фикстуры для логики доступности значений и каскада.
+- Добавить опции CLI или планировщика для частичной переиндексации по категориям или ID товаров.
+- Добавить примеры импорта/экспорта типовых конфигураций модуля.
+- Улучшить точки стилизации для сторонних шаблонов.
+- Добавить больше языковых пакетов.
 
-## Long Term
+## Долгосрочные планы
 
-- Broaden compatibility testing across Joomla 5.x and 6.x releases.
-- Explore support for additional catalog field types.
-- Provide a demo site or reproducible demo dataset.
-- Add CI package builds and release artifacts.
+- Расширить тестирование совместимости по релизам Joomla 5.x и 6.x.
+- Изучить поддержку дополнительных типов полей каталога.
+- Подготовить демо-сайт или воспроизводимый демонабор данных.
+- Добавить сборку пакетов в CI и публикацию артефактов релиза.

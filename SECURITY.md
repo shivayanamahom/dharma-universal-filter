@@ -1,23 +1,23 @@
-# Security Policy
+# Политика безопасности
 
-## Supported Versions
+## Поддерживаемые версии
 
-Security fixes target the current public release and the `main` branch.
+Исправления безопасности выходят для текущего публичного релиза и ветки `main`.
 
-## Reporting a Vulnerability
+## Сообщение об уязвимости
 
-Please report security issues privately to the maintainer before opening a public issue. Include:
+Пожалуйста, сообщайте о проблемах безопасности приватно сопровождающему до открытия публичного issue. Укажите:
 
-- Affected version or commit.
-- Joomla and RadicalMart versions.
-- Steps to reproduce.
-- Expected impact.
+- Затронутую версию или коммит.
+- Версии Joomla и RadicalMart.
+- Шаги для воспроизведения.
+- Ожидаемые последствия.
 
-Do not include production credentials, database dumps, or private customer data in reports.
+Не включайте в отчёты боевые учётные данные, дампы БД и приватные данные клиентов.
 
-## Security Expectations
+## Ожидания по безопасности
 
-- Installer scripts must not store secrets.
-- Filter input must be read through Joomla input APIs.
-- SQL queries must use Joomla database quoting/binding patterns.
-- Layout output must be escaped unless intentionally rendering trusted Joomla HTML.
+- Установочные скрипты не должны хранить секреты.
+- Входные данные фильтра должны читаться через input-API Joomla.
+- SQL-запросы должны использовать экранирование/привязку параметров Joomla.
+- Вывод раскладок должен экранироваться, кроме намеренного вывода доверенного HTML Joomla.

@@ -1,29 +1,29 @@
-# Architecture
+# Архитектура
 
-Dharma Universal Filter is shipped as a Joomla package with a shared library and three extensions.
+Dharma Universal Filter поставляется как пакет Joomla с общей библиотекой и тремя расширениями.
 
-## Shared Library
+## Общая библиотека
 
-`lib_dharma_universal_filter` provides `Dharma\UniversalFilter\Indexer`, the single implementation of the write path that builds the index tables. Both the system plugin (live, per-product reindex) and the task plugin (scheduled full rebuild) delegate to it, so indexing logic can never drift between them.
+`lib_dharma_universal_filter` предоставляет класс `Dharma\UniversalFilter\Indexer` — единственную реализацию пути записи, которая строит таблицы индекса. И системный плагин (живая переиндексация по одному товару), и плановый плагин (полная пересборка по расписанию) обращаются к нему, поэтому логика индексации не может разойтись между ними.
 
-The indexer:
+Индексатор:
 
-- owns the database schema (`sql/install.mysql.utf8.sql`) and creates the tables when missing;
-- loads products in batches (one query per batch) instead of one query per product;
-- wraps delete + insert in a database transaction so an interrupted write cannot leave a product partially indexed;
-- invalidates the module read cache after every write so newly indexed data is visible immediately.
+- владеет схемой БД (`sql/install.mysql.utf8.sql`) и создаёт таблицы, если их нет;
+- загружает товары пачками (один запрос на пачку) вместо запроса на каждый товар;
+- оборачивает удаление + вставку в транзакцию БД, чтобы прерванная запись не оставила товар частично проиндексированным;
+- сбрасывает кэш чтения модуля после каждой записи, чтобы свежие данные были видны сразу.
 
-## Module
+## Модуль
 
-`mod_dharma_universal_filter` renders the frontend filter UI. It reads module parameters, resolves the current RadicalMart category context, prepares selected filters, loads available filter data, and renders the selected Joomla module layout.
+`mod_dharma_universal_filter` выводит фронтенд-интерфейс фильтра. Он читает параметры модуля, определяет текущий контекст категории RadicalMart, готовит выбранные фильтры, загружает доступные данные фильтра и выводит выбранную раскладку модуля.
 
-The module contains reusable field layouts under:
+Модуль содержит переиспользуемые раскладки полей в:
 
 ```text
 src/modules/mod_dharma_universal_filter/layouts/dharma_universal_filter/field/
 ```
 
-These layouts make template overrides practical for individual field types:
+Эти раскладки делают удобными переопределения шаблонов для отдельных типов полей:
 
 - `select.php`
 - `checkboxes.php`
@@ -32,33 +32,33 @@ These layouts make template overrides practical for individual field types:
 - `price_inputs.php`
 - `price_slider.php`
 
-## Index Tables
+## Таблицы индекса
 
-The library owns the schema and creates two tables (the package and plugin installers create them from the same SQL file):
+Схемой владеет библиотека, она создаёт две таблицы (скрипты пакета и плагинов создают их из того же SQL-файла):
 
 - `#__dharma_universal_filter_index`
 - `#__dharma_universal_filter_price_index`
 
-The field index stores normalized category, product, field, value hash, language, and stock information. The price index stores product price ranges by category and currency.
+Индекс полей хранит нормализованную информацию о категории, товаре, поле, хэше значения, языке и наличии. Индекс цен хранит диапазоны цен товаров по категории и валюте.
 
-The module uses these tables to avoid recalculating every available option directly from product field data on each request.
+Модуль использует эти таблицы, чтобы не пересчитывать каждое доступное значение напрямую из данных полей товаров на каждый запрос.
 
-## Cascading Availability
+## Каскадная доступность
 
-When the cascade is enabled, the module recomputes available values per field from the active selection. Values with no matching products are hidden or disabled depending on the empty-options mode. When *every* value of a field is incompatible with the current selection, each option of that field is disabled individually, because the custom checkbox/list layouts honour per-option state rather than a field-level `disabled` attribute.
+Когда каскад включён, модуль пересчитывает доступные значения по каждому полю исходя из текущего выбора. Значения, под которые нет товаров, скрываются или отключаются в зависимости от режима пустых опций. Когда несовместимы *все* значения поля, отключается каждая опция этого поля по отдельности, потому что кастомные раскладки чекбоксов/списков учитывают состояние на уровне опции, а не атрибут `disabled` на уровне поля.
 
-## System Plugin
+## Системный плагин
 
-`plg_system_dharma_universal_filter` is responsible for keeping index data up to date around product save workflows and reindex tooling. It delegates the actual indexing to the shared library `Indexer`.
+`plg_system_dharma_universal_filter` отвечает за поддержание индекса в актуальном состоянии вокруг сохранения товаров и за инструмент переиндексации. Саму индексацию он делегирует библиотечному `Indexer`.
 
-## Task Plugin
+## Плановый плагин
 
-`plg_task_dharma_universal_filter` provides scheduled reindexing through the shared library `Indexer`. It is intended for full catalog rebuilds, maintenance windows, and sites where product data changes outside normal administrator save flows.
+`plg_task_dharma_universal_filter` обеспечивает переиндексацию по расписанию через библиотечный `Indexer`. Он предназначен для полной пересборки каталога, обслуживания и сайтов, где данные товаров меняются вне обычного сохранения через админку.
 
-## Frontend Behavior
+## Поведение фронтенда
 
-The frontend can work in non-AJAX mode, AJAX mode with instant updates, or AJAX mode with an explicit apply action. Horizontal filters can render checkbox groups as dropdown-like controls with selected-count badges and clear buttons. Vertical filters can render compact controls using the same field layout system.
+Фронтенд может работать без AJAX, в AJAX-режиме с мгновенными обновлениями или в AJAX-режиме с явным применением. Горизонтальные фильтры могут выводить группы чекбоксов как дропдаун-подобные элементы с бейджем количества выбранных и кнопкой очистки. Вертикальные фильтры выводят компактные элементы на той же системе раскладок полей.
 
-## Joomla Compatibility
+## Совместимость с Joomla
 
-The code is written for Joomla 5/6 style extension structure and namespaces. Deprecated Joomla `J*` classes should not be added.
+Код написан под структуру и пространства имён расширений в стиле Joomla 5/6. Устаревшие классы Joomla `J*` добавлять не следует.

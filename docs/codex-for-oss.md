@@ -1,34 +1,34 @@
-# OpenAI Codex for OSS Application Notes
+# Заметки для заявки OpenAI Codex for OSS
 
-These notes can be used when applying for OpenAI Codex for OSS support.
+Эти заметки можно использовать при подаче заявки на поддержку OpenAI Codex for OSS.
 
-## Repository
+## Репозиторий
 
 ```text
 https://github.com/shivayanamahom/dharma-universal-filter
 ```
 
-## Role
+## Роль
 
 ```text
-Maintainer / creator
+Сопровождающий / автор
 ```
 
-## Project Summary
+## Краткое описание проекта
 
-Dharma Universal Filter is an open-source Joomla 5/6 extension package that adds fast indexed filtering for RadicalMart catalogs. It helps Joomla store owners build usable product catalogs with AJAX filtering, cascading filter availability, reusable field layouts, scheduled indexing, multilingual support, and administrator-configurable behavior.
+Dharma Universal Filter — открытый пакет расширений Joomla 5/6, добавляющий быструю индексированную фильтрацию для каталогов RadicalMart. Он помогает владельцам магазинов на Joomla строить удобные каталоги товаров с AJAX-фильтрацией, каскадной доступностью фильтра, переиспользуемыми раскладками полей, плановой индексацией, мультиязычностью и настраиваемым из админки поведением.
 
-## Why This Project Matters
+## Почему проект важен
 
-Joomla remains widely used for small and mid-sized commerce/catalog websites, but high-quality catalog filtering is often tied to site-specific code or commercial extensions. This project provides an open, inspectable, Joomla 5/6-compatible filter package focused on real catalog performance and maintainable template overrides.
+Joomla по-прежнему широко используется для небольших и средних коммерческих/каталожных сайтов, но качественная фильтрация каталога часто завязана на site-specific код или коммерческие расширения. Этот проект даёт открытый, прозрачный, совместимый с Joomla 5/6 пакет фильтра, ориентированный на реальную производительность каталога и поддерживаемые переопределения шаблонов.
 
-## Planned Use of Codex/API Credits
+## Планируемое использование кредитов Codex/API
 
-We would use Codex to:
+Мы будем использовать Codex, чтобы:
 
-- Improve Joomla 5/6 compatibility.
-- Add tests for indexing and cascading availability logic.
-- Optimize SQL queries for larger catalogs.
-- Improve accessibility and keyboard behavior for filter controls.
-- Expand documentation and examples for integrators.
-- Add CI checks for package structure and release builds.
+- Улучшать совместимость с Joomla 5/6.
+- Добавлять тесты для логики индексации и каскадной доступности.
+- Оптимизировать SQL-запросы для крупных каталогов.
+- Улучшать доступность и работу с клавиатурой для элементов фильтра.
+- Расширять документацию и примеры для интеграторов.
+- Добавлять CI-проверки структуры пакета и сборок релиза.

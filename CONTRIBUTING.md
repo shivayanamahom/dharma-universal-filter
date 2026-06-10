@@ -1,34 +1,34 @@
-# Contributing
+# Как помочь проекту
 
-Contributions are welcome, especially around Joomla compatibility, RadicalMart field support, performance, accessibility, translations, and reusable layouts.
+Будем рады вкладу, особенно в части совместимости с Joomla, поддержки полей RadicalMart, производительности, доступности, переводов и переиспользуемых раскладок.
 
-## Development Setup
+## Настройка окружения
 
-1. Install Joomla 5.x or 6.x locally.
-2. Install RadicalMart.
-3. Clone this repository outside the Joomla web root.
-4. Copy or symlink the extension folders into a Joomla test site while developing.
-5. Build installable archives with:
+1. Установите Joomla 5.x или 6.x локально.
+2. Установите RadicalMart.
+3. Склонируйте этот репозиторий вне веб-корня Joomla.
+4. Во время разработки копируйте или делайте симлинки папок расширения в тестовый сайт Joomla.
+5. Собирайте устанавливаемые архивы командой:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\build\build-package.ps1
 ```
 
-## Coding Rules
+## Правила кода
 
-- Keep Joomla 5/6 compatibility.
-- Do not introduce deprecated Joomla `J*` classes.
-- Do not use `Joomla\CMS\Input\Input`; use `Joomla\Input\Input` when a direct input import is required.
-- Do not use `Joomla\CMS\Filesystem\*`; use `Joomla\Filesystem\*`.
-- Escape user-facing output in layouts.
-- Use Joomla database APIs and quoted identifiers/values.
-- Keep site-specific template overrides and private data out of the repository.
+- Сохраняйте совместимость с Joomla 5/6.
+- Не вводите устаревшие классы Joomla `J*`.
+- Не используйте `Joomla\CMS\Input\Input`; при прямом импорте берите `Joomla\Input\Input`.
+- Не используйте `Joomla\CMS\Filesystem\*`; берите `Joomla\Filesystem\*`.
+- Экранируйте пользовательский вывод в раскладках.
+- Используйте API базы данных Joomla с экранированием идентификаторов и значений.
+- Не держите в репозитории site-specific переопределения шаблонов и приватные данные.
 
-## Pull Requests
+## Пул-реквесты
 
-Please include:
+Пожалуйста, прикладывайте:
 
-- A short description of the behavior change.
-- Joomla/RadicalMart versions used for testing.
-- Screenshots for UI changes.
-- Notes about database or migration changes.
+- Краткое описание изменения поведения.
+- Версии Joomla/RadicalMart, на которых тестировали.
+- Скриншоты для изменений интерфейса.
+- Пометки об изменениях БД или миграций.
