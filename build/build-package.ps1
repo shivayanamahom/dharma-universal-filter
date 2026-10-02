@@ -37,7 +37,29 @@ function New-ZipFromDirectory {
         Remove-Item -LiteralPath $Destination -Force
     }
 
-    Compress-Archive -Path (Join-Path $Source "*") -DestinationPath $Destination -CompressionLevel Optimal
+    # Compress-Archive в Windows PowerShell 5.1 записывает пути с обратными
+    # слэшами ("layouts\field\x.php"), и на macOS/Linux после установки
+    # вместо папок получаются плоские файлы. Поэтому архив собирается вручную
+    # с прямыми слэшами, как этого требует спецификация ZIP.
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    $sourceFull = [System.IO.Path]::GetFullPath($Source).TrimEnd('\', '/')
+    $zip = [System.IO.Compression.ZipFile]::Open($Destination, [System.IO.Compression.ZipArchiveMode]::Create)
+
+    try {
+        Get-ChildItem -LiteralPath $sourceFull -Recurse -File -Force |
+            Where-Object { $_.Name -ne '.DS_Store' } |
+            ForEach-Object {
+                $entryName = $_.FullName.Substring($sourceFull.Length).TrimStart('\', '/') -replace '\\', '/'
+                [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                    $zip, $_.FullName, $entryName, [System.IO.Compression.CompressionLevel]::Optimal
+                ) | Out-Null
+            }
+    }
+    finally {
+        $zip.Dispose()
+    }
 }
 
 $libraryZip = "lib_dharma_universal_filter_$Version.zip"

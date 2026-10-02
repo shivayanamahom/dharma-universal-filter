@@ -80,12 +80,19 @@ package/
   pkg_dharma_universal_filter.xml
   script.php
 build/
-  build-package.ps1
+  build-package.sh    # macOS, Linux, WSL
+  build-package.ps1   # Windows PowerShell
 ```
 
 ## Сборка
 
-Из корня репозитория:
+Готовые архивы лежат в разделе [Releases](https://github.com/shivayanamahom/dharma-universal-filter/releases). Чтобы собрать их самостоятельно, из корня репозитория выполните:
+
+```bash
+build/build-package.sh
+```
+
+На Windows (PowerShell):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\build\build-package.ps1
@@ -97,9 +104,11 @@ powershell -ExecutionPolicy Bypass -File .\build\build-package.ps1
 dist/pkg_dharma_universal_filter_0.2.0.zip
 ```
 
+> Пути внутри архивов должны записываться через `/`. Стандартный `Compress-Archive` из Windows PowerShell 5.1 пишет `\`, и на macOS/Linux после установки вместо папок `layouts/`, `src/`, `tmpl/` получаются плоские файлы, а фильтр не работает. Оба скрипта сборки этого избегают; `build-package.sh` дополнительно проверяет архивы на обратные слэши.
+
 ## Установка
 
-Установите `dist/pkg_dharma_universal_filter_0.2.0.zip` через администратора Joomla:
+Установите `pkg_dharma_universal_filter_0.2.0.zip` (из Releases или из `dist/` после сборки) через администратора Joomla:
 
 ```text
 Система -> Установка -> Расширения

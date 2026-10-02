@@ -10,9 +10,11 @@
 4. Во время разработки копируйте или делайте симлинки папок расширения в тестовый сайт Joomla.
 5. Собирайте устанавливаемые архивы командой:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\build\build-package.ps1
+```bash
+build/build-package.sh
 ```
+
+На Windows: `powershell -ExecutionPolicy Bypass -File .\build\build-package.ps1`. Не собирайте архивы через `Compress-Archive` вручную: он записывает пути с обратными слэшами, и архив не устанавливается корректно на macOS/Linux.
 
 ## Правила кода
 
