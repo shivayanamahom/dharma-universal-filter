@@ -6,7 +6,7 @@
 	<creationDate>June 2026</creationDate>
 	<copyright>Copyright (c) 2026 Dharma Design. All rights reserved.</copyright>
 	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<description>Shared indexing library for the Dharma Universal Filter module and plugins. Owns the filter index tables.</description>
 	<namespace path="src">Dharma\UniversalFilter</namespace>
 	<scriptfile>script.php</scriptfile>

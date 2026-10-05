@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+	<update>
+		<name>Dharma Universal Filter</name>
+		<description>Dharma Universal Filter Joomla package</description>
+		<element>pkg_dharma_universal_filter</element>
+		<type>package</type>
+		<version>0.2.1</version>
+		<downloads>
+			<downloadurl type="full" format="zip">https://github.com/shivayanamahom/dharma-universal-filter/releases/download/v0.2.1/pkg_dharma_universal_filter_0.2.1.zip</downloadurl>
+		</downloads>
+		<sha256>de85fdec7b0e604838605799f33cf279fea5368b297b92768403b8b34311c96c</sha256>
+	</update>
+</updates>
