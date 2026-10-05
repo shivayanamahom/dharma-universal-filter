@@ -34,6 +34,39 @@ jobs:
             exit 0
           fi
 
+          python3 - "$version" <<'PY'
+          import re
+          import sys
+          from pathlib import Path
+
+          version = sys.argv[1]
+          manifests = (
+              Path("src/libraries/dharma_universal_filter/dharma_universal_filter.xml"),
+              Path("src/modules/mod_dharma_universal_filter/mod_dharma_universal_filter.xml"),
+              Path("src/plugins/system/dharma_universal_filter/dharma_universal_filter.xml"),
+              Path("src/plugins/task/dharma_universal_filter/dharma_universal_filter.xml"),
+          )
+          for manifest in manifests:
+              source = manifest.read_text(encoding="utf-8")
+              source, count = re.subn(r"<version>[^<]+</version>", f"<version>{version}</version>", source, count=1)
+              if count != 1:
+                  raise SystemExit(f"Could not synchronize version in {manifest}")
+              manifest.write_text(source, encoding="utf-8")
+
+          package = Path("package/pkg_dharma_universal_filter.xml")
+          source = package.read_text(encoding="utf-8")
+          for name in (
+              "lib_dharma_universal_filter",
+              "mod_dharma_universal_filter",
+              "plg_system_dharma_universal_filter",
+              "plg_task_dharma_universal_filter",
+          ):
+              source, count = re.subn(rf"({re.escape(name)}_)[^<]+\.zip", rf"\g<1>{version}.zip", source, count=1)
+              if count != 1:
+                  raise SystemExit(f"Could not synchronize package filename for {name}")
+          package.write_text(source, encoding="utf-8")
+          PY
+
           bash build/build-package.sh "$version"
           package="dist/pkg_dharma_universal_filter_${version}.zip"
           test -f "$package"
@@ -63,7 +96,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add updates.xml
+          git add updates.xml package/pkg_dharma_universal_filter.xml src/libraries/dharma_universal_filter/dharma_universal_filter.xml src/modules/mod_dharma_universal_filter/mod_dharma_universal_filter.xml src/plugins/system/dharma_universal_filter/dharma_universal_filter.xml src/plugins/task/dharma_universal_filter/dharma_universal_filter.xml
           if ! git diff --cached --quiet; then
             git commit -m "Publish Joomla update metadata for $tag"
             git push origin HEAD:main
