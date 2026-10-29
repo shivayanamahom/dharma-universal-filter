@@ -479,6 +479,15 @@ class DharmaUniversalFilterHelper
 				}
 				elseif ($display === 'checkboxes')
 				{
+					// the "not selected" placeholder of a list has no meaning for checkboxes
+					for ($i = count($fieldXml->option) - 1; $i >= 0; $i--)
+					{
+						if ((string) $fieldXml->option[$i]['value'] === '')
+						{
+							unset($fieldXml->option[$i]);
+						}
+					}
+
 					$fieldXml['type']           = 'RMFieldsStandard_Filter_checkboxes';
 					$fieldXml['addfieldprefix'] = 'Joomla\Plugin\RadicalMartFields\Standard\Field';
 					$fieldXml['multiple']       = 'true';
