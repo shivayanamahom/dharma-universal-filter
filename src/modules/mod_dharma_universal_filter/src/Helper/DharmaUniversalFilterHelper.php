@@ -884,7 +884,7 @@ class DharmaUniversalFilterHelper
 		$query = $db->getQuery(true)
 			->select([
 				$db->quoteName('field_name'),
-				'ANY_VALUE(' . $db->quoteName('field_value') . ') AS ' . $db->quoteName('field_value'),
+				'MIN(' . $db->quoteName('field_value') . ') AS ' . $db->quoteName('field_value'),
 				'COUNT(DISTINCT ' . $db->quoteName('item_id') . ') AS ' . $db->quoteName('option_count'),
 			])
 			->from($db->quoteName('#__dharma_universal_filter_index'))

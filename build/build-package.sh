@@ -4,7 +4,7 @@
 #
 # Запуск из любого места:
 #   build/build-package.sh            # версия берётся из package/pkg_dharma_universal_filter.xml
-#   build/build-package.sh 0.3.0      # или указывается явно (должна совпадать с именами файлов в манифесте пакета)
+#   build/build-package.sh 0.3.1      # или указывается явно (должна совпадать с именами файлов в манифесте пакета)
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
