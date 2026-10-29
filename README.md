@@ -108,7 +108,7 @@ dist/pkg_dharma_universal_filter_0.2.0.zip
 
 ## Установка
 
-Установите `pkg_dharma_universal_filter_0.2.2.zip` (из Releases или из `dist/` после сборки) через администратора Joomla:
+Установите `pkg_dharma_universal_filter_0.2.3.zip` (из Releases или из `dist/` после сборки) через администратора Joomla:
 
 ```text
 Система -> Установка -> Расширения

@@ -13,6 +13,7 @@
 
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScriptInterface;
 use Joomla\CMS\Language\Text;
@@ -21,6 +22,9 @@ use Joomla\Database\DatabaseDriver;
 use Joomla\Database\ParameterType;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 return new class () implements ServiceProviderInterface {
 	public function register(Container $container)
 	{
@@ -165,6 +169,16 @@ return new class () implements ServiceProviderInterface {
 			 */
 			public function postflight(string $type, InstallerAdapter $adapter): bool
 			{
+				// Joomla core does not copy <layouts> of modules, so it is done here
+				if ($type === 'uninstall')
+				{
+					$this->removeLayouts($adapter->getParent()->getManifest()->layouts);
+				}
+				else
+				{
+					$this->parseLayouts($adapter->getParent()->getManifest()->layouts, $adapter->getParent());
+				}
+
 				if (in_array($type, ['install', 'update'], true))
 				{
 					$this->migrateLayoutParams();
@@ -179,6 +193,84 @@ return new class () implements ServiceProviderInterface {
 						{
 							$this->$method($adapter);
 						}
+					}
+				}
+
+				return true;
+			}
+
+			/**
+			 * Copies the files of the manifest <layouts> element to /layouts/<destination>.
+			 *
+			 * @param   \SimpleXMLElement|null  $element    The layouts node.
+			 * @param   Installer|null          $installer  Installer calling object.
+			 *
+			 * @return  bool
+			 *
+			 * @since  0.2.3
+			 */
+			protected function parseLayouts(?\SimpleXMLElement $element = null, ?Installer $installer = null): bool
+			{
+				if (!$element || !$installer || !count($element->children()))
+				{
+					return false;
+				}
+
+				$destinationName = (string) $element->attributes()->destination;
+				$destination     = Path::clean(JPATH_ROOT . '/layouts' . ($destinationName ? '/' . $destinationName : ''));
+				$folder          = (string) $element->attributes()->folder;
+				$source          = ($folder && file_exists($installer->getPath('source') . '/' . $folder))
+					? $installer->getPath('source') . '/' . $folder : $installer->getPath('source');
+
+				$copyFiles = [];
+				foreach ($element->children() as $file)
+				{
+					$path = [
+						'src'  => Path::clean($source . '/' . $file),
+						'dest' => Path::clean($destination . '/' . $file),
+						'type' => $file->getName() === 'folder' ? 'folder' : 'file',
+					];
+
+					if (!Folder::exists(dirname($path['dest'])) && !Folder::create(dirname($path['dest'])))
+					{
+						return false;
+					}
+
+					$copyFiles[] = $path;
+				}
+
+				return $installer->copyFiles($copyFiles, true);
+			}
+
+			/**
+			 * Removes the files installed from the manifest <layouts> element.
+			 *
+			 * @param   \SimpleXMLElement|null  $element  The layouts node.
+			 *
+			 * @return  bool
+			 *
+			 * @since  0.2.3
+			 */
+			protected function removeLayouts(?\SimpleXMLElement $element = null): bool
+			{
+				if (!$element || !count($element->children()))
+				{
+					return false;
+				}
+
+				$destinationName = (string) $element->attributes()->destination;
+				$source          = Path::clean(JPATH_ROOT . '/layouts' . ($destinationName ? '/' . $destinationName : ''));
+
+				foreach ($element->children() as $file)
+				{
+					$path = Path::clean($source . '/' . $file);
+					if (is_dir($path))
+					{
+						Folder::delete($path);
+					}
+					elseif (is_file($path))
+					{
+						File::delete($path);
 					}
 				}
 
