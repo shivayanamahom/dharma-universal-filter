@@ -614,3 +614,91 @@
 		justify-content: center;
 	}
 }
+
+/* Vertical mode keeps checkboxes in the flow; "checkbox_display_mode = limit"
+   only folds the extra rows behind a "show more" control. */
+.duf-vchecklist .form-check {
+	display: flex;
+	align-items: center;
+	min-height: 2rem;
+	margin: 0;
+	padding: 0;
+}
+
+.duf-vchecklist [hidden] {
+	display: none !important;
+}
+
+.duf-vchecklist .form-check-input {
+	flex: 0 0 1.15rem;
+	width: 1.15rem;
+	height: 1.15rem;
+	margin: 0 .7rem 0 0;
+	border: 1px solid #c9ced6;
+	border-radius: .25rem;
+	background-color: #fff;
+	cursor: pointer;
+}
+
+.duf-vchecklist .form-check-input:checked {
+	background-color: var(--duf-accent, var(--color-accent, #0d6efd));
+	border-color: var(--duf-accent, var(--color-accent, #0d6efd));
+}
+
+.duf-vchecklist .form-check-label {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	width: 100%;
+	cursor: pointer;
+	line-height: 1.35;
+}
+
+.duf-option-label__text {
+	min-width: 0;
+}
+
+.duf-option-label__count {
+	margin-left: auto;
+	color: #8a929d;
+	font-size: .8em;
+	white-space: nowrap;
+}
+
+.duf-vchecklist .form-check-input:disabled {
+	opacity: .45;
+	cursor: not-allowed;
+}
+
+.duf-vchecklist .form-check-input:disabled + .form-check-label {
+	opacity: .55;
+	cursor: not-allowed;
+}
+
+.duf-vchecklist__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: .5rem;
+	margin: .35rem 0 0;
+	padding: 0;
+	background: none;
+	border: 0;
+	color: var(--duf-accent, var(--color-accent, #0d6efd));
+	font-size: .8rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.duf-vchecklist__chevron {
+	width: .45rem;
+	height: .45rem;
+	border-right: 1px solid currentColor;
+	border-bottom: 1px solid currentColor;
+	transform: rotate(45deg) translateY(-2px);
+	transition: transform .2s ease;
+}
+
+.duf-vchecklist.is-expanded .duf-vchecklist__chevron {
+	transform: rotate(225deg) translate(-1px, -1px);
+}

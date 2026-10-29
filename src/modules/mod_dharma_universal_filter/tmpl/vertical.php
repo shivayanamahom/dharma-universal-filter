@@ -165,7 +165,41 @@ $stickyOffset = max(0, (int) $params->get('sticky_offset', 0));
 $stickyClass = $stickyEnabled ? ' duf-filter-sticky' : '';
 $stickyAttrs = $stickyEnabled ? ' style="top: ' . $stickyOffset . 'px;" data-duf-sticky-top="' . $stickyOffset . '"' : '';
 
-$renderFilterForm = static function (string $suffix, string $formClass = '') use ($action, $form, $formId, $module, $onSubmit, $params, $renderFields): void {
+$resolveFieldLayout = static function (array $config, string $name, string $group, string $type, Registry $params): string {
+	$display = (string) ($config['display'] ?? 'auto');
+	$isPrice = $name === 'price' && $group === 'filter';
+	$isCheckbox = str_contains($type, 'checkbox');
+
+	if ($isPrice)
+	{
+		return $params->get('price_display', 'inputs') === 'slider'
+			? 'modules.dharma_universal_filter.field.price_slider'
+			: 'modules.dharma_universal_filter.field.price_inputs';
+	}
+
+	if ($display === 'list')
+	{
+		return 'modules.dharma_universal_filter.field.select';
+	}
+
+	if ($display === 'radio')
+	{
+		return 'modules.dharma_universal_filter.field.radio';
+	}
+
+	if ($display === 'checkboxes' || ($display === 'auto' && $isCheckbox))
+	{
+		return 'modules.dharma_universal_filter.field.checkboxes_vertical';
+	}
+
+	return match ($type) {
+		'radio' => 'modules.dharma_universal_filter.field.radio',
+		'list' => 'modules.dharma_universal_filter.field.select',
+		default => 'modules.dharma_universal_filter.field.default',
+	};
+};
+
+$renderFilterForm = static function (string $suffix, string $formClass = '') use ($action, $form, $formId, $module, $onSubmit, $params, $renderFields, $resolveFieldLayout): void {
 	?>
 	<form action="<?php echo $action; ?>" method="get" onsubmit="<?php echo $onSubmit; ?>"
 		  data-dharma-filter-ajax="<?php echo $formId . $suffix; ?>"
@@ -191,15 +225,8 @@ $renderFilterForm = static function (string $suffix, string $formClass = '') use
 				$layout = (string) ($renderField['config']['layout'] ?? '');
 				if ($layout === '')
 				{
-					$type = strtolower((string) $form->getFieldAttribute($name, 'type', '', $group));
-					$layout = match (true) {
-						$name === 'price' && $group === 'filter' && $params->get('price_display', 'inputs') === 'slider' => 'modules.dharma_universal_filter.field.price_slider',
-						$name === 'price' && $group === 'filter' => 'modules.dharma_universal_filter.field.price_inputs',
-						str_contains($type, 'checkbox') => 'modules.dharma_universal_filter.field.checkboxes',
-						$type === 'radio' => 'modules.dharma_universal_filter.field.radio',
-						$type === 'list' => 'modules.dharma_universal_filter.field.select',
-						default => 'modules.dharma_universal_filter.field.default',
-					};
+					$type   = strtolower((string) $form->getFieldAttribute($name, 'type', '', $group));
+					$layout = $resolveFieldLayout($renderField['config'], $name, $group, $type, $params);
 				}
 
 				$labelId   = $id . '_label';

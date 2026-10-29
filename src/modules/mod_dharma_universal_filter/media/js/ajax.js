@@ -110,7 +110,55 @@ document.addEventListener('change', function (event) {
   }
 });
 
+function initVerticalChecklists(root) {
+  (root || document).querySelectorAll('[data-duf-vchecklist]').forEach(function (list) {
+    if (list.dataset.dufChecklistReady) {
+      return;
+    }
+
+    list.dataset.dufChecklistReady = '1';
+    var visibleCount = parseInt(list.dataset.visibleCount || '0', 10);
+    var items = list.querySelectorAll('.form-check');
+    var toggle = list.querySelector('[data-duf-vchecklist-toggle]');
+
+    if (!toggle || !visibleCount || items.length <= visibleCount) {
+      if (toggle) {
+        toggle.hidden = true;
+      }
+      return;
+    }
+
+    items.forEach(function (item, index) {
+      item.hidden = index >= visibleCount;
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  initVerticalChecklists(document);
+});
+
+document.addEventListener('onDharmaUniversalFilterAfterAjax', function () {
+  initVerticalChecklists(document);
+});
+
 document.addEventListener('click', function (event) {
+  var checklistToggle = event.target.closest ? event.target.closest('[data-duf-vchecklist-toggle]') : null;
+  if (checklistToggle) {
+    var checklist = checklistToggle.closest('[data-duf-vchecklist]');
+    if (checklist) {
+      var expanded = checklist.classList.toggle('is-expanded');
+      checklist.querySelectorAll('.form-check').forEach(function (item, index) {
+        item.hidden = !expanded && index >= parseInt(checklist.dataset.visibleCount || '0', 10);
+      });
+      var label = checklistToggle.querySelector('[data-duf-vchecklist-label]');
+      if (label) {
+        label.textContent = expanded ? (checklist.dataset.hideExtra || 'Hide') : (checklist.dataset.showAll || 'Show more');
+      }
+    }
+    return;
+  }
+
   if (event.target.closest && !event.target.closest('[data-duf-checkselect]')) {
     document.querySelectorAll('[data-duf-checkselect][open]').forEach(function (details) {
       details.removeAttribute('open');
