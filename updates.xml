@@ -6,12 +6,12 @@
 		<element>pkg_dharma_universal_filter</element>
 		<type>package</type>
 		<client>site</client>
-		<version>0.2.3</version>
-		<infourl title="Dharma Universal Filter v0.2.3">https://github.com/shivayanamahom/dharma-universal-filter/releases/tag/v0.2.3</infourl>
+		<version>0.2.4</version>
+		<infourl title="Dharma Universal Filter v0.2.4">https://github.com/shivayanamahom/dharma-universal-filter/releases/tag/v0.2.4</infourl>
 		<downloads>
-			<downloadurl type="full" format="zip">https://github.com/shivayanamahom/dharma-universal-filter/releases/download/v0.2.3/pkg_dharma_universal_filter_0.2.3.zip</downloadurl>
+			<downloadurl type="full" format="zip">https://github.com/shivayanamahom/dharma-universal-filter/releases/download/v0.2.4/pkg_dharma_universal_filter_0.2.4.zip</downloadurl>
 		</downloads>
-		<sha256>24c30e35424ac39140173ec055799379098adff37bf2a58decd5d882e6b01eee</sha256>
+		<sha256>a7314704182e1f5d60613e8aeed91a9394049d555962982ba48682c2493acd47</sha256>
 		<maintainer>Dharma Design</maintainer>
 		<maintainerurl>https://github.com/shivayanamahom</maintainerurl>
 		<targetplatform name="joomla" version="((5|6)\..*)" />
