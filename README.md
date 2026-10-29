@@ -4,6 +4,14 @@
 [![License: GPL v3+](https://img.shields.io/badge/License-GPL--3.0--or--later-blue.svg)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/shivayanamahom/dharma-universal-filter)](https://github.com/shivayanamahom/dharma-universal-filter/releases)
 
+<!-- ai-notice -->
+> [!NOTE]
+> **О проекте.** Этот проект написан при помощи ИИ для моего собственного использования и опубликован «как есть» (*as is*). Он может содержать ошибки и подходить не для всех сайтов и версий Joomla. Гарантий, поддержки и сроков исправления я не обещаю. Перед использованием изучите код и проверьте его на тестовой копии сайта, всё на ваш риск. Идеи и замечания приветствуются (Issues, Pull Request), но отвечу и приму их не обязательно.
+>
+> *AI-assisted and built for my own use. Provided **as is**, without warranty or support. Review the code and test on a staging copy first; use at your own risk. Issues and PRs are welcome, but no response is guaranteed.*
+
+<!-- /ai-notice -->
+
 Dharma Universal Filter — пакет расширений Joomla 5/6 для каталогов RadicalMart. Он добавляет настраиваемый модуль фильтра товаров с индексированными данными, AJAX-обновлением, вертикальной и горизонтальной раскладками, поддержкой offcanvas и плановой переиндексацией.
 
 Проект ориентирован на реальные страницы каталога, где фильтр должен оставаться быстрым при большом количестве полей, цен, категорий и комбинаций значений.
